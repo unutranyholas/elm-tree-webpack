@@ -7,14 +7,16 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import List exposing (map, filter, head, concat, member, reverse)
 import Debug exposing (log)
+import Random
 
 
 main : Program Never
 main =
-    App.beginnerProgram
-        { model = init
-        , update = update
+    App.program
+        { init = init
         , view = view
+        , update = update
+        , subscriptions = subscriptions
         }
 
 
@@ -39,11 +41,13 @@ type alias IndexedItem =
     }
 
 
-init : Model
+init : ( Model, Cmd Msg )
 init =
-    { items = []
-    , uid = 0
-    }
+    ( { items = []
+      , uid = 0
+      }
+    , Cmd.none
+    )
 
 
 
@@ -56,9 +60,10 @@ type Msg
     | AddChild
     | Remove
     | Modify Id Item.Msg
+    | UpdateColor Int
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update message ({ items, uid } as model) =
     let
         active =
@@ -72,49 +77,61 @@ update message ({ items, uid } as model) =
     in
         case message of
             AddParent ->
-                { model
+                ( { model
                     | items =
                         [ IndexedItem uid
                             [ active ]
-                            (Item.init ("New entity" ++ toString uid))
+                            (Item.init ("New entity" ++ toString uid) "#000")
                         ]
                             ++ map (replaceChildren parent [ active ] [ uid ]) items
                     , uid = uid + 1
-                }
+                  }
+                , Random.generate UpdateColor (Random.int 111 666)
+                )
 
             AddSibling ->
-                { model
+                ( { model
                     | items =
                         [ IndexedItem uid
                             []
-                            (Item.init ("New entity" ++ toString uid))
+                            (Item.init ("New entity" ++ toString uid) "#000")
                         ]
                             ++ map (addChildren parent [ uid ]) items
                     , uid = uid + 1
-                }
+                  }
+                , Random.generate UpdateColor (Random.int 111 666)
+                )
 
             AddChild ->
-                { model
+                ( { model
                     | items =
                         [ IndexedItem uid
                             []
-                            (Item.init ("New entity" ++ toString uid))
+                            (Item.init ("New entity" ++ toString uid) "#000")
                         ]
                             ++ map (addChildren active [ uid ]) items
                     , uid = uid + 1
-                }
+                  }
+                , Random.generate UpdateColor (Random.int 111 666)
+                )
 
             Remove ->
-                { model
+                ( { model
                     | items =
                         items
                             |> filter (\l -> not (l.id == active))
                             |> map (addChildren parent activeChildren)
+                            |> map (setActive parent)
                     , uid = uid + 1
-                }
+                  }
+                , Cmd.none
+                )
 
             Modify id msg ->
-                { model | items = map (updateHelp id msg) items }
+                ( { model | items = map (updateHelp id msg) items }, Cmd.none )
+
+            UpdateColor color ->
+                ( { model | items = map (updateColor active color) items }, Cmd.none )
 
 
 updateHelp : Id -> Item.Msg -> IndexedItem -> IndexedItem
@@ -131,6 +148,17 @@ updateHelp targetId msg { id, children, model } =
 
 -- removeItem : Id -> List IndexedItem -> List IndexedItem
 -- removeItem targetId items =
+
+
+updateColor : Id -> Int -> IndexedItem -> IndexedItem
+updateColor targetId color { id, children, model } =
+    IndexedItem id
+        children
+        (if targetId == id then
+            { model | color = "#" ++ (toString color) }
+         else
+            model
+        )
 
 
 addChildren : Id -> List Id -> IndexedItem -> IndexedItem
@@ -160,6 +188,17 @@ getActive items =
     items
         |> filter (\l -> l.model.isActive)
         |> head
+
+
+setActive : Id -> IndexedItem -> IndexedItem
+setActive targetId { id, children, model } =
+    IndexedItem id
+        children
+        (if targetId == id then
+            { model | isActive = True }
+         else
+            model
+        )
 
 
 getParent : Id -> List IndexedItem -> Maybe IndexedItem
@@ -245,3 +284,12 @@ viewBranches items ids =
 
             _ ->
                 span [] (map (\l -> div [ class "level" ] [ App.map (Modify l.id) (Item.view l.model), viewBranches items l.children ]) (reverse selectedItems))
+
+
+
+-- SUBS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none

@@ -18,10 +18,10 @@ type alias Model =
     }
 
 
-init : String -> Model
-init name =
+init : String -> String -> Model
+init name color =
     { name = name
-    , color = "#660000"
+    , color = color
     , isActive = True
     }
 
