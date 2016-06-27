@@ -1,5 +1,346 @@
-$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
-@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+* {
+	margin: 0;
+	padding: 0;
+}
 
-// can add Boostrap overrides, additional Sass/CSS below...
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
+  font: normal 13px 'Open Sans', sans-serif;
+}
+
+
+.layout {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: stretch;
+	overflow: hidden;
+}
+
+.main-menu {
+	background-color: #30333b;
+	position: relative;
+	flex: 0 0 60px;
+}
+
+.logo {
+	position: absolute;
+	left: 50%;
+	margin-left: -20px;
+	bottom: 10px;
+}
+
+.entities-menu {
+	background-color: #42454E;
+	min-width: 220px;
+	flex: 0 0 auto;
+	padding: 20px 0;
+	box-sizing: border-box;
+}
+
+.view {
+	background-color: #fff;
+	flex: 1 1 auto;
+	box-sizing: border-box;
+}
+
+.view-content {
+	padding: 25px 20px;
+	max-height: 100%;
+	overflow: auto;
+	display: flex;
+	align-items: stretch;
+}
+
+.entity-item {
+    box-sizing: border-box;
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 15px 0 23px;
+    cursor: pointer;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.entity-item:hover {
+	background-color: #30333b;
+}
+
+.entity-item.active {
+	border-radius: 2px 0 0 2px;
+}
+
+.entity-item > i {
+	content: '';
+	display: block;
+	width: 5px;
+	height: 5px;
+	border: solid 1px #000;
+	background-color: #000;
+	position: absolute;
+	top: 50%;
+	margin-top: -3px;
+	left: 9px;
+	z-index: 1;
+	border-radius: 50%;
+}
+
+
+.entity-item.active > i {
+	border-color: rgba(255,255,255,0.6) !important;
+}
+
+
+.level { position: relative; margin-left: 20px;}
+
+
+.level:after {
+	content: '';
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    bottom: 15px;
+    width: 1px;
+    background-color: rgba(255,255,255,0.25);
+}
+
+.level:last-child:after {
+    box-shadow: -20px 0 0 0 #030814;
+}
+
+.entities-menu > span > .level:last-child:after {
+    box-shadow: none
+}
+
+.level > span > .level:before {
+	content: '';
+    position: absolute;
+    top: 15px;
+    left: -8px;
+    width: 17px;
+    border-left: solid 1px rgba(255,255,255,0.25);
+    border-bottom: solid 1px rgba(255,255,255,0.25);
+    z-index: 1;
+}
+
+.general-info {
+	box-sizing: border-box;
+	width: 80%;
+	padding-right: 20px;
+}
+
+.additional-info {
+	box-sizing: border-box;
+	width: 20%;
+	min-width: 275px;
+}
+
+.property-list__line {
+	border: dashed 1px #f4b0ff;
+	border-radius: 2px;
+	margin-bottom: 9px;
+	display: flex;
+	padding: 8px 8px 8px 12px;
+	align-items: center;
+}
+.property-list .separator {
+	height: 3px;
+	background-color: #f9d2ff;
+	margin-bottom: 9px;
+	border-radius: 2px;
+}
+
+.property-list__label {
+	width: 40%;
+	flex-shrink: 0;
+}
+
+.property-list__item {
+	flex-grow: 1;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+}
+
+.project-icon,
+.user-avatar {
+	width: 20px;
+	height: 20px;
+	border-radius: 2px;
+}
+
+.property-list .project-icon,
+.property-list .user-avatar {
+	margin-right: 5px;
+}
+
+.button {
+	box-sizing: border-box;
+	border: solid 1px #f8cbff;
+	font-size: 13px;
+	font-family: 'Open Sans', sans-serif;
+	line-height: 16px;
+	padding: 3px 10px 5px 10px;
+	background: transparent;
+	border-radius: 2px;
+	cursor: pointer;
+	display: block;
+	position: relative;
+	height: 26px;
+	color: #e341ff;
+}
+
+.button.button-big {
+	padding: 10px 15px;
+	font-size: 14px;
+	height: 38px;
+}
+
+.property-list .button-big {
+	width: 100%;
+	text-align: center;
+	margin-top: 19px;
+}
+
+.entity-tabs-container {
+	display: flex;
+	align-items: center;
+	border-bottom: solid 1px #ccc;
+}
+
+.button-add-container {
+	flex-shrink: 0;
+}
+
+.entity-tabs {
+	box-sizing: border-box;
+	display: flex;
+	list-style: none;
+	position: relative;
+	padding-left: 10px;
+}
+
+.entity-tabs:before {
+	content: '';
+	height: calc(100% - 2px);
+	display: block;
+	width: 10px;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-bottom-right-radius: 2px;
+	position: absolute;
+	left: -1px;
+	bottom: -1px;
+	background-color: #fff;
+}
+
+
+.entity-tabs__item {
+	line-height: 32px;
+	box-sizing: border-box;
+	padding: 0 15px;
+	font-size: 14px;
+	border-top: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-radius: 3px 3px 0 0;
+	margin: 0 0 -1px -1px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.entity-tabs__item.active {
+	border-bottom-color: #fff;
+	font-weight: 600;
+}
+
+.entity-tabs__item.active + .entity-tabs__item {
+	border-bottom-left-radius: 3px;
+}
+
+.button-add-container {
+	padding: 3px 4px;
+	flex-shrink: 0;
+}
+
+.button.add {
+	width: 26px;
+	padding: 0;
+}
+
+.button.add:before,
+.button.add:after {
+	content: '';
+	left: 50%;
+	top: 50%;
+	background: #e341ff;
+	position: absolute;
+}
+
+
+.button.add:before {
+	width: 2px;
+	height: 12px;
+	margin-left: -1px;
+	margin-top: -6px;
+}
+
+.button.add:after {
+	width: 12px;
+	height: 2px;
+	margin-left: -6px;
+	margin-top: -1px;
+}
+
+.entity-name {
+	font-weight: 600;
+	font-size: 35px;
+	padding: 5px 10px;
+	letter-spacing: 1;
+	margin-bottom: 15px;
+}
+
+.entity-description {
+	padding: 30px 20px;
+}
+
+.entity-description li {
+	margin: 0 20px 10px 10px;
+}
+
+.entity-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.entity-type-editor {
+	display: flex;
+	align-items: center;
+	padding-bottom: 5px;
+	padding-left: 8px;
+}
+
+.entity-type-editor .entity-type {
+	padding: 1px 5px;
+	border-radius: 2px;
+	text-transform: uppercase;
+	display: block;
+}
+
+.entity-type-container {
+	padding: 1px;
+	border: dashed 1px #f4b0ff;
+	border-radius: 2px;
+}
+
+.entity-type-editor .entity-id {
+	padding-left: 10px;
+}
